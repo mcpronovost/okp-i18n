@@ -4,7 +4,13 @@ OKP i18n is a lightweight internationalization solution specifically designed fo
 
 ## Features
 
-(TODO)
+1. **Check Missing Translation**
+    - **Translation Key Detection**: Automatically scans files for `t()` function calls to identify translation keys in use
+    - **Recursive File Scanning**: Automatically traverses all subdirectories to find translation files and source code
+    - **Clear Error Reporting**: Shows missing translation keys with their source file locations
+    - **Configurable**: Customize supported languages, file extensions, and directories
+    - **Smart Language Code Handling**: Supports regional language codes (e.g., "en-US" is mapped to "en")
+    - **CI/CD Ready**: Can be integrated into continuous integration pipelines to catch missing translations before deployment
 
 ## Installation
 

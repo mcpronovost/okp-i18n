@@ -10,7 +10,11 @@
   },
   "type": "module",
   "license": "BSD-3-Clause",
+  "main": "i18n/index.ts",
   "private": false,
+  "bin": {
+    "check-translations": "./i18n/check-translations.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
