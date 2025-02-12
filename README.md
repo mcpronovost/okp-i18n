@@ -57,18 +57,9 @@ await initI18n({
 ### Translation Files
 
 - Format: JSON files in locales directory
-- One file per language
-- Support for pluralization rules (one, zero, other)
+- Supports translations from multiple files
+- Supports pluralization rules (one, zero, other)
 - Automatic fallback to "other" form
-
-### Translation Function
-
-- Simple t() function for accessing translations
-- Support for pluralization via count parameter
-- Language-specific translations via getTranslation()
-- Automatic fallback to key when translation missing
-
-### File Structure
 
 ```json
 {
@@ -86,6 +77,13 @@ await initI18n({
 }
 ```
 
+### Translation Function
+
+- Simple t() function for accessing translations
+- Support for pluralization via count parameter
+- Language-specific translations via getTranslation()
+- Automatic fallback to key when translation missing
+
 ### Translation Checker
 
 - Command-line utility for finding missing translations
@@ -96,6 +94,26 @@ await initI18n({
   - `--extensions`: File extensions to scan (default: [".astro", ".jsx", ".tsx", ".vue"])
 - Scans source files for t() function calls
 - Reports missing translations with easy to read console output
+
+#### Direct Command
+
+```bash
+npx okp-i18n check --languages=en,fr --src=./src --locales=./src/locales
+```
+
+#### Script in package.json
+
+```json
+  {
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "preview": "vite build && vite preview",
+      "lint": "eslint .",
+      "check-translations": "check-translations --languages=en,fr --src=./src --locales=./src/_services/locales"
+    }
+  }
+```
 
 ## Example Usage
 
@@ -113,11 +131,11 @@ await initI18n({
 });
 
 // Use translations
-function Welcome({ name }) {
+function Home() {
   return (
     <div>
-      <h1>{t("welcome.title")}</h1>
-      <p>{t("welcome.greeting", { name })}</p>
+      <h1>{t("Welcome")}</h1>
+      <p>{t("Welcome to the home page")}</p>
     </div>
   );
 }
@@ -137,12 +155,12 @@ await initI18n({
 });
 
 // Use specific language translations
-function Welcome({ name }) {
+function Home() {
   const { t } = getTranslation("fr");
   return (
     <div>
-      <h1>{t("welcome.title")}</h1>
-      <p>{t("welcome.greeting", { name })}</p>
+      <h1>{t("Welcome")}</h1>
+      <p>{t("Welcome to the home page")}</p>
     </div>
   );
 }
