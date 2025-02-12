@@ -2,6 +2,7 @@
 
 import type {
   VersionType,
+  RouterRegex,
   I18nConfigType,
   LangType,
 } from "./types";
@@ -10,7 +11,7 @@ import type {
  * I18n version number
  * @since 0.1.0
  */
-export const version: VersionType = "0.1.1";
+export const version: VersionType = "0.1.2";
 
 /**
  * Core i18n configuration
@@ -19,7 +20,9 @@ export const version: VersionType = "0.1.1";
  */
 export const i18nConfig: I18nConfigType = {
   defaultLang: "en",
+  currentLang: "en",
   supportedLangs: ["en"],
+  useUrlLang: true,
   localesPath: "/src/locales",
 };
 
@@ -30,15 +33,36 @@ export const i18nConfig: I18nConfigType = {
 let loadedLocales: Record<string, Record<string, string>> = {};
 
 /**
+ * Constants for route parsing
+ * @since 0.1.2
+ */
+const REGEX: RouterRegex = {
+  LANG_CODE: /^\/([a-z]{2})(?:\/|$)/i,
+};
+
+/**
+ * Extract language code from URL path
+ * @returns The language code from URL or null if not found
+ * @since 0.1.2
+ */
+const getLangFromUrl = (): LangType | null => {
+  const match = window.location.pathname.match(REGEX.LANG_CODE);
+  return match ? match[1].toLowerCase() as LangType : null;
+};
+
+/**
  * Initialize i18n with custom configuration
  * @param config Configuration object
  * @param config.defaultLang Default language code
+ * @param config.currentLang Current language code
  * @param config.supportedLangs Array of supported languages
+ * @param config.useUrlLang Whether to use the language code from the URL
  * @param config.localesPath Path to the locales folder
  * @example
  * ```ts
  * initI18n({
  *   defaultLang: "en",
+ *   currentLang: "en",
  *   supportedLangs: ["en", "fr"],
  *   localesPath: "/src/locales",
  * });
@@ -47,6 +71,15 @@ let loadedLocales: Record<string, Record<string, string>> = {};
  */
 export const initI18n = async (config: Partial<I18nConfigType> = {}): Promise<void> => {
   Object.assign(i18nConfig, config);
+  
+  // Set current language from URL if enabled
+  if (i18nConfig.useUrlLang) {
+    const urlLang = getLangFromUrl();
+    if (urlLang && i18nConfig.supportedLangs.includes(urlLang)) {
+      i18nConfig.currentLang = urlLang;
+    }
+  }
+
   // Load translations immediately during initialization
   loadedLocales = await i18nConfig.supportedLangs.reduce(async (acc, lang) => {
     const prevAcc = await acc;
@@ -83,10 +116,9 @@ const importTranslations = async (lang: string) => {
 export const t = (
   key: string,
   count?: number | undefined,
-  lang: LangType = i18nConfig.defaultLang
+  lang: LangType = i18nConfig.currentLang || i18nConfig.defaultLang
 ) => {
   const translation = loadedLocales[lang]?.[key];
-  console.log("translation", loadedLocales);
   if (typeof translation === "object" && count !== undefined) {
     const rules = new Intl.PluralRules(lang);
     const pluralForm = rules.select(count);
@@ -115,7 +147,7 @@ export const t = (
  * @returns {Function} t.count - Optional count for pluralization
  * @since 0.1.0
  */
-export const getTranslation = (lang: LangType = i18nConfig.defaultLang) => {
+export const getTranslation = (lang: LangType = i18nConfig.currentLang || i18nConfig.defaultLang) => {
   return {
     t: (key: string, count?: number) => t(key, count, lang),
   };

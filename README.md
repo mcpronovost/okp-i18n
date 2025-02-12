@@ -35,7 +35,9 @@ npm i @mcpronovost/okp-i18n
 ```ts
 {
   defaultLang: "en",
+  currentLang: "en",
   supportedLangs: ["en"],
+  useUrlLang: true,
   localesPath: "/src/locales",
 }
 ```
