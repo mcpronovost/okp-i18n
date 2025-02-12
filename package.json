@@ -1,7 +1,7 @@
 {
   "name": "@mcpronovost/okp-i18n",
   "description": "A lightweight i18n solution specifically designed for Vite-based projects with multilingual support.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "M-C Pronovost",
   "homepage": "https://github.com/mcpronovost/okp-i18n",
   "repository": {
