@@ -4,13 +4,23 @@ OKP i18n is a lightweight internationalization solution specifically designed fo
 
 ## Features
 
-1. **Check Missing Translation**
-    - **Translation Key Detection**: Automatically scans files for `t()` function calls to identify translation keys in use
-    - **Recursive File Scanning**: Automatically traverses all subdirectories to find translation files and source code
-    - **Clear Error Reporting**: Shows missing translation keys with their source file locations
-    - **Configurable**: Customize supported languages, file extensions, and directories
-    - **Smart Language Code Handling**: Supports regional language codes (e.g., "en-US" is mapped to "en")
-    - **CI/CD Ready**: Can be integrated into continuous integration pipelines to catch missing translations before deployment
+1. **Translation Management**
+   - JSON-based translation files
+   - Configurable default and supported languages
+   - Dynamic translation file loading
+   - Automatic fallback when translations missing
+   
+2. **Translation Functions**
+   - Simple t() function for translations
+   - Support for pluralization using Intl.PluralRules
+   - Language-specific translation via getTranslation()
+   - Fallback to key when translation missing
+
+3. **Development Tools**
+   - Command-line translation checker
+   - Missing translation detection in source files
+   - Support for multiple file types (.astro, .jsx, .tsx, .vue)
+   - Console warnings for missing translations
 
 ## Installation
 
@@ -20,15 +30,123 @@ npm i @mcpronovost/okp-i18n
 
 ## Configuration
 
-(TODO)
+### Default Configuration
+
+```ts
+{
+  defaultLang: "en",
+  supportedLangs: ["en"],
+  localesPath: "/src/locales",
+}
+```
+
+### Direct Configuration
+
+```ts
+import { initI18n } from "@mcpronovost/okp-i18n";
+
+await initI18n({
+  defaultLang: "fr",
+  supportedLangs: ["en", "fr"],
+  localesPath: "/src/services/locales",
+});
+```
 
 ## Key Components
 
-(TODO)
+### Translation Files
+
+- Format: JSON files in locales directory
+- One file per language
+- Support for pluralization rules (one, zero, other)
+- Automatic fallback to "other" form
+
+### Translation Function
+
+- Simple t() function for accessing translations
+- Support for pluralization via count parameter
+- Language-specific translations via getTranslation()
+- Automatic fallback to key when translation missing
+
+### File Structure
+
+```json
+{
+  "Hello": "Bonjour",
+  "Threads": {
+    "one": "Sujet",
+    "zero": "Sujet",
+    "other": "Sujets"
+  },
+  "Message": {
+    "one": "Message",
+    "other": "Messages"
+  },
+  "User": "Utilisateur"
+}
+```
+
+### Translation Checker
+
+- Command-line utility for finding missing translations
+- Configurable via command line arguments:
+  - `--languages`: Supported language codes (default: ["en"])
+  - `--locales`: Path to locales directory (default: "./locales")
+  - `--src`: Path to source files (default: "./src")
+  - `--extensions`: File extensions to scan (default: [".astro", ".jsx", ".tsx", ".vue"])
+- Scans source files for t() function calls
+- Reports missing translations with easy to read console output
 
 ## Example Usage
 
-(TODO)
+Use default language for translations
+
+```ts
+import { useEffect } from "react";
+import { t, initI18n } from "@mcpronovost/okp-i18n";
+
+// Initialize i18n
+await initI18n({
+  defaultLang: "en",
+  supportedLangs: ["en", "fr"],
+  localesPath: "/src/locales"
+});
+
+// Use translations
+function Welcome({ name }) {
+  return (
+    <div>
+      <h1>{t("welcome.title")}</h1>
+      <p>{t("welcome.greeting", { name })}</p>
+    </div>
+  );
+}
+```
+
+Use specific language for translations
+
+```ts
+import { useEffect } from "react";
+import { getTranslation, initI18n } from "@mcpronovost/okp-i18n";
+
+// Initialize i18n
+await initI18n({
+  defaultLang: "en",
+  supportedLangs: ["en", "fr"],
+  localesPath: "/src/locales"
+});
+
+// Use specific language translations
+function Welcome({ name }) {
+  const { t } = getTranslation("fr");
+  return (
+    <div>
+      <h1>{t("welcome.title")}</h1>
+      <p>{t("welcome.greeting", { name })}</p>
+    </div>
+  );
+}
+```
 
 ## Peer Dependencies
 
