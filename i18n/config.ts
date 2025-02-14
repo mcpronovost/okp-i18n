@@ -5,7 +5,7 @@ import { getLangFromUrl, importTranslations } from "./utils";
  * I18n version number
  * @since 0.1.0
  */
-export const version: VersionType = "0.1.3";
+export const version: VersionType = "0.2.0";
 
 /**
  * Loaded locales
