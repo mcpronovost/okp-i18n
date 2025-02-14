@@ -147,7 +147,7 @@ Use specific language for translations
 
 ```ts
 import { useEffect } from "react";
-import { getTranslation, initI18n } from "@mcpronovost/okp-i18n";
+import { getI18n, initI18n } from "@mcpronovost/okp-i18n";
 
 // Initialize i18n
 await initI18n({
@@ -158,7 +158,7 @@ await initI18n({
 
 // Use specific language translations
 function Home() {
-  const { t } = getTranslation("fr");
+  const { t } = getI18n("fr");
   return (
     <div>
       <h1>{t("Welcome")}</h1>
